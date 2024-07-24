@@ -23,7 +23,7 @@ tamanho_quadrado = 10
 velocidade_jogo = 15
 
 # função para gerar comida:
-def gerar_comida():
+def gerar_comida(pixels):
     tipos_comida = [
         {"cor": verde, "pontos": 1},
         {"cor": azul, "pontos": 2},
@@ -32,6 +32,9 @@ def gerar_comida():
     tipo_comida = random.choice(tipos_comida)
     comida_x = round(random.randrange(0, largura - tamanho_quadrado) / 10.0) * 10.0
     comida_y = round(random.randrange(0, altura - tamanho_quadrado) / 10.0) * 10.0
+    while [comida_x, comida_y] in pixels: #impedir que a comida apareça na mesma localização da cobra
+        comida_x = round(random.randrange(0, largura - tamanho_quadrado) / 10.0) * 10.0
+        comida_y = round(random.randrange(0, altura - tamanho_quadrado) / 10.0) * 10.0
     return comida_x, comida_y, tipo_comida["cor"], tipo_comida["pontos"]
 
 # função para desenhar comida:
@@ -109,7 +112,7 @@ def rodar_jogo():
     pontuacao = 0
 
     # gerar comida, apenas uma inicialmente:
-    comida_x, comida_y, cor_comida, pontos_comida = gerar_comida()
+    comida_x, comida_y, cor_comida, pontos_comida = gerar_comida(pixels)
 
     while not fim_jogo:
         tela.fill(preta)  # cor do fundo
@@ -152,7 +155,7 @@ def rodar_jogo():
         if x == comida_x and y == comida_y:
             tamanho_cobra += 1
             pontuacao += pontos_comida
-            comida_x, comida_y, cor_comida, pontos_comida = gerar_comida()
+            comida_x, comida_y, cor_comida, pontos_comida = gerar_comida(pixels)
         relogio.tick(velocidade_jogo)
 
     fim_de_jogo(pontuacao)
